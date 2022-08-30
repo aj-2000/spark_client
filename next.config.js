@@ -5,10 +5,13 @@ module.exports = {
       url:
         process.env.NODE_ENV === 'development'
           ? 'http://localhost:3000'
-          : 'https://earvinpiamonte-nextjs-tailwindcss-template.vercel.app',
+          : 'https://spark-client.vercel.app',
       title: 'Spark Foods',
       description: 'Healthy Food at your Door Step.',
     },
+  },
+  images: {
+    domains: [],
   },
   swcMinify: true,
   i18n: {
