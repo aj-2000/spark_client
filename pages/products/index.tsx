@@ -1,4 +1,5 @@
 import FoodItem from "@/components/FoodItem";
+import Navbar from "@/components/Navbar";
 import React from "react"
 
 const styles = {
@@ -6,6 +7,8 @@ const styles = {
 }
 const Products = () => {
   return (
+    <>
+    <Navbar/>
     <div className={styles.container}>
       <FoodItem/>
       <FoodItem/>
@@ -20,6 +23,8 @@ const Products = () => {
       <FoodItem/>
       <FoodItem/>
     </div>
+    </>
+    
   );
 };
 
