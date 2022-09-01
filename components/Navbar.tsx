@@ -15,25 +15,25 @@ const Navbar = () => {
                   <div className="ml-10 flex items-baseline space-x-4">
                     <a
                       className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      href="/#"
+                      href="/story"
                     >
                       Our Story
                     </a>
                     <a
                       className="text-gray-800 dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      href="/#"
+                      href="/menu"
                     >
                       Menu
                     </a>
                     <a
                       className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      href="/#"
+                      href="/auth/login"
                     >
                       Login
                     </a>
                     <a
                       className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                      href="/#"
+                      href="/auth/register"
                     >
                       Register
                     </a>
@@ -70,7 +70,7 @@ const Navbar = () => {
                           aria-labelledby="options-menu"
                         >
                           <a
-                            href="#"
+                            href="/orders"
                             className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
                             role="menuitem"
                           >
@@ -79,7 +79,7 @@ const Navbar = () => {
                             </span>
                           </a>
                           <a
-                            href="#"
+                            href="/account"
                             className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
                             role="menuitem"
                           >
@@ -88,7 +88,7 @@ const Navbar = () => {
                             </span>
                           </a>
                           <a
-                            href="#"
+                            href="/logout"
                             className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
                             role="menuitem"
                           >
@@ -122,25 +122,25 @@ const Navbar = () => {
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
               <a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#"
+                href="/story"
               >
                 Our Story
               </a>
               <a
                 className="text-gray-800 dark:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#"
+                href="/menu"
               >
                 Menu
               </a>
               <a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#"
+                href="/auth/login"
               >
                 Login
               </a>
               <a
                 className="text-gray-300 hover:text-gray-800 dark:hover:text-white block px-3 py-2 rounded-md text-base font-medium"
-                href="/#"
+                href="/auth/register"
               >
                 Register
               </a>
