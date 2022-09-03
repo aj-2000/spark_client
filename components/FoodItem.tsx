@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 interface FoodItemProps {
   id: number;
@@ -10,7 +10,6 @@ interface FoodItemProps {
 }
 
 const FoodItem = ({ name, category, imageUrl, price, color }: FoodItemProps) => {
-  console.log(color);
   const styles = {
     container: "",
     card: `flex-shrink-0 mx-2 mb-6 relative overflow-hidden bg-${color}-500 rounded-lg max-w-xs shadow-lg -z-20`,
@@ -25,7 +24,6 @@ const FoodItem = ({ name, category, imageUrl, price, color }: FoodItemProps) => 
     addToCartButton:
       `mt-2 px-6 py-2 transition ease-in duration-200 uppercase rounded-full bg-white text-${color}-500 border-2 border-${color}-500`,
   };
-  console.log(styles);
   return (
     <div className={styles.container}>
       <div className={styles.card}>

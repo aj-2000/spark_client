@@ -1,0 +1,17 @@
+export const avatars = [
+  "apple",
+  "banana",
+  "bread",
+  "cheese",
+  "citrus",
+  "grape",
+  "melon",
+  "orange",
+  "pineapple",
+  "pizza",
+  "strawberry",
+  "watermelon",
+  "watermelon_2",
+  "watermelon_slice",
+  "whole_melon",
+];
