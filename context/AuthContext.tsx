@@ -17,18 +17,18 @@ type authContextType = {
   user: user;
   isLoading: boolean;
   errorMessage: string;
-  login: () => void;
+  login: (email: string, password: string) => void;
   logout: () => void;
-  signup: () => void;
+  signup: (name: string, email: string, password: string) => void;
 };
 
 const authContextDefaultValues: authContextType = {
   user: emptyUser,
   isLoading: false,
   errorMessage: "",
-  login: () => {},
+  login: (email: string, password: string) => {},
   logout: () => {},
-  signup: () => {},
+  signup: (name: string, email: string, password: string) => {},
 };
 
 const AuthContext = createContext<authContextType>(authContextDefaultValues);
@@ -45,17 +45,18 @@ export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<user>(emptyUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const login = async () => {
+  const login = async (email: string, password: string) => {
+    console.log(email, password);
     setIsLoading(true);
     const { user, session, error } = await supabase.auth.signIn({
-      email: "hi@ajaysharma.dev",
-      password: "ajay123!@#",
+      email: email || 'hi@ajaysharma.dev',
+      password: password || 'ajay123!@#',
     });
     if (error) {
       setErrorMessage(error?.message);
     }
     setUser({
-      name: user?.user_metadata!.full_name || "",
+      name: user?.user_metadata.name || "",
       email: user?.email || "",
       profileImgUrl:
         "https://jaigkxhrkwvcyqqlvfmn.supabase.co/storage/v1/object/public/sparks/avatars/banana.png" ||
@@ -75,16 +76,16 @@ export function AuthProvider({ children }: Props) {
     }
     setIsLoading(false);
   };
-  const signup = async () => {
+  const signup = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     const { user, session, error } = await supabase.auth.signUp(
       {
-        email: "hi@ajaysharma.dev",
-        password: "ajay123!@#",
+        email: email || "hi@ajaysharma.dev",
+        password: password || "ajay123!@#",
       },
       {
         data: {
-          name: "Ajay Sharma",
+          name: name || "Ajay Sharma",
         },
       }
     );

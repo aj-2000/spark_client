@@ -13,7 +13,7 @@ const register = () => {
     <div className={styles.container}>
       <Navbar />
       <div className={styles.authFormBox}>
-        <AuthForm />
+        <AuthForm formType="register" />
       </div>
       <Footer />
     </div>

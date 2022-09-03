@@ -1,11 +1,40 @@
-import React from "react";
-
+import React, { useState } from "react";
+import { useAuth } from "context/AuthContext";
+import { useRouter } from 'next/router'
 interface AuthFormProps {
   formType: string;
 }
 const AuthForm = ({ formType }: AuthFormProps) => {
+  const [email, setEmail] = useState<string>("");
+  const router = useRouter()
+  const [password, setPassword] = useState<string>("");
+  const [name, setName] = useState<string>("");
+  const { user, isLoading, errorMessage, login, logout, signup } = useAuth();
+  function emailHandler(event: any) {
+    setEmail(event.target?.value);
+  }
+  function passwordHandler(event: any) {
+    setPassword(event.target?.value);
+  }
+  function nameHandler(event: any) {
+    setName(event.target?.value);
+  }
+  function submitHandler(event: any) {
+    console.log(email);
+    if (email !== "" && password !== "" && formType === "login") {
+      login(email, password);
+      while(isLoading);
+      router.push('/menu');
+    }
+
+    if (email !== "" && password !== "" && formType === "register") {
+      signup(name, email, password);
+    }
+  }
   return (
     <div>
+      <p>{isLoading && "Loading..."}</p>
+      <p>{user?.id}</p>
       <div className="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
         {formType === "login" && (
           <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
@@ -52,6 +81,7 @@ const AuthForm = ({ formType }: AuthFormProps) => {
                     id="full-name"
                     className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                     placeholder="Your name"
+                    onChange={nameHandler}
                   />
                 </div>
               </div>
@@ -74,6 +104,7 @@ const AuthForm = ({ formType }: AuthFormProps) => {
                   id="sign-in-email"
                   className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   placeholder="Your email"
+                  onChange={emailHandler}
                 />
               </div>
             </div>
@@ -92,9 +123,10 @@ const AuthForm = ({ formType }: AuthFormProps) => {
                 </span>
                 <input
                   type="password"
-                  id="sign-in-email"
+                  id="password"
                   className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                   placeholder="Your password"
+                  onChange={passwordHandler}
                 />
               </div>
             </div>
@@ -111,14 +143,37 @@ const AuthForm = ({ formType }: AuthFormProps) => {
                 </div>
               </div>
             )}
-            <div className="flex w-full">
+            <div className="flex flex-col w-full">
               <button
-                type="submit"
-                className="py-2 px-4  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
+                type="button"
+                onClick={submitHandler}
+                className="py-2 px-4 flex justify-center items-center  bg-purple-600 hover:bg-purple-700 focus:ring-purple-500 focus:ring-offset-purple-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
               >
-                {formType === 'login' && 'Login'}
-                {formType === 'register' && 'Register'}
+                {isLoading && (
+                  <svg
+                    width="20"
+                    height="20"
+                    fill="currentColor"
+                    className="mr-2 animate-spin"
+                    viewBox="0 0 1792 1792"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M526 1394q0 53-37.5 90.5t-90.5 37.5q-52 0-90-38t-38-90q0-53 37.5-90.5t90.5-37.5 90.5 37.5 37.5 90.5zm498 206q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-704-704q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm1202 498q0 52-38 90t-90 38q-53 0-90.5-37.5t-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-964-996q0 66-47 113t-113 47-113-47-47-113 47-113 113-47 113 47 47 113zm1170 498q0 53-37.5 90.5t-90.5 37.5-90.5-37.5-37.5-90.5 37.5-90.5 90.5-37.5 90.5 37.5 37.5 90.5zm-640-704q0 80-56 136t-136 56-136-56-56-136 56-136 136-56 136 56 56 136zm530 206q0 93-66 158.5t-158 65.5q-93 0-158.5-65.5t-65.5-158.5q0-92 65.5-158t158.5-66q92 0 158 66t66 158z"></path>
+                  </svg>
+                )}
+                {formType === "login" && !isLoading && "Login"}
+                {formType === "register" && !isLoading && "Register"}
+                {isLoading && "loading"}
               </button>
+              {errorMessage !== "" && (
+                <div
+                  className="mt-4 bg-red-200 border-red-600 text-red-600 border-l-2 p-4"
+                  role="alert"
+                >
+                  <p className="font-bold">An Error Occured!</p>
+                  <p>{errorMessage}</p>
+                </div>
+              )}
             </div>
           </form>
         </div>
