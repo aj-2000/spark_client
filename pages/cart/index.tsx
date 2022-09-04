@@ -2,7 +2,7 @@ import CartItem from "@/components/CartItem";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import React from "react";
-
+import { useCart } from "context/CartContext";
 const styles = {
   container: "",
   mainHeading: "font-mono text-2xl subpixel-antialiased font-light mt-16",
@@ -15,6 +15,7 @@ const styles = {
   itemsList: "mt-4 flex flex-col gap-4",
 };
 const Cart = () => {
+  const { cart, isLoading, errorMessage } = useCart();
   return (
     <div className={styles.container}>
       <Navbar />

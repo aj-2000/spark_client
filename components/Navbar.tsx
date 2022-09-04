@@ -1,10 +1,22 @@
 import React from "react";
 import { useAuth } from "context/AuthContext";
+import {useCart} from "context/CartContext";
 const Navbar = () => {
   const { user, isLoading, errorMessage, login, logout, signup } = useAuth();
-
+  const { cart, setCartData } = useCart();
+  const cartData = {
+    userId: "afafe",
+    numberOfItems: 1,
+    totalAmount: 0,
+    shippingCharges: 2,
+    discount: 0,
+    cartItems: [],
+  };
   return (
     <div>
+      {cart.userId}
+      {cart.shippingCharges}
+      <button onClick={() => setCartData(cartData)}>set cart data</button>
       <div>
         <nav className="bg-white dark:bg-gray-800  shadow ">
           <div className="max-w-7xl mx-auto px-8">

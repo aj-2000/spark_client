@@ -1,5 +1,6 @@
 import supabase from "utils/supabase";
 import { createContext, ReactNode, useContext, useState } from "react";
+import {useCart} from "./CartContext";
 export const emptyUser = {
   name: "",
   email: "",
@@ -45,12 +46,12 @@ export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<user>(emptyUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const { cart, setCartData } = useCart();
   const login = async (email: string, password: string) => {
-    console.log(email, password);
     setIsLoading(true);
     const { user, session, error } = await supabase.auth.signIn({
-      email: email || 'hi@ajaysharma.dev',
-      password: password || 'ajay123!@#',
+      email: email || "hi@ajaysharma.dev",
+      password: password || "ajay123!@#",
     });
     if (error) {
       setErrorMessage(error?.message);
@@ -63,6 +64,37 @@ export function AuthProvider({ children }: Props) {
         "",
       id: user?.id || "",
     });
+    if (!error) {
+      const { data, error } = await supabase
+        .from("users")
+        .update({ is_email_verified: true })
+        .match({ id: user?.id });
+      if (error) {
+        setErrorMessage(error?.message);
+      }
+      if (!error) {
+        const { data, error } = await supabase
+          .from("carts")
+          .select()
+          .eq("user_id", user?.id);
+
+        if (data) {
+          console.log(data[0]);
+          const cartData = {
+            userId: data[0]?.user_id,
+            numberOfItems: data[0]?.number_of_items,
+            totalAmount: data[0]?.total_amount,
+            shippingCharges: data[0]?.shipping_charges,
+            discount: data[0]?.discount,
+            cartItems: data[0]?.cart_items,
+          };
+          console.log(data[0]?.user_id)
+          setCartData(cartData)
+        }
+      }
+    }
+
+    console.log(cart);
     setIsLoading(false);
   };
 
@@ -70,7 +102,6 @@ export function AuthProvider({ children }: Props) {
     setIsLoading(true);
     setUser(emptyUser);
     const { error } = await supabase.auth.signOut();
-    console.log(error);
     if (error) {
       setErrorMessage(error?.message);
     }
@@ -89,7 +120,29 @@ export function AuthProvider({ children }: Props) {
         },
       }
     );
-    console.log(user);
+    if (!error) {
+      const { data, error } = await supabase
+        .from("users")
+        .insert([{ id: user?.id, name: name, email: email }]);
+      if (error) {
+        setErrorMessage(error?.message);
+      }
+      if (!error) {
+        const { data, error } = await supabase.from("carts").insert([
+          {
+            user_id: user?.id,
+            number_of_items: 0,
+            total_amount: 0,
+            shipping_charges: 0,
+            discount: 0,
+            cart_items: [],
+          },
+        ]);
+        if (error) {
+          setErrorMessage(error?.message);
+        }
+      }
+    }
     if (error) {
       setErrorMessage(error?.message);
     }
