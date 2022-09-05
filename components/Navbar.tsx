@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "context/AuthContext";
-import {useCart} from "context/CartContext";
+import { useCart } from "context/CartContext";
+import supabase from "utils/supabase";
 const Navbar = () => {
   const { user, isLoading, errorMessage, login, logout, signup } = useAuth();
   const { cart, setCartData } = useCart();
-  const cartData = {
-    userId: "afafe",
-    numberOfItems: 1,
-    totalAmount: 0,
-    shippingCharges: 2,
-    discount: 0,
-    cartItems: [],
-  };
+  async function fetchCartData() {
+    const { data, error } = await supabase
+      .from("carts")
+      .select()
+      .match({ user_id: '922002a4-1dd0-4e26-a59e-978809982b3b' });
+
+    if (data) {
+      console.log(data);
+      const cartData = {
+        userId: data[0]?.user_id,
+        numberOfItems: data[0]?.number_of_items,
+        totalAmount: data[0]?.total_amount,
+        shippingCharges: data[0]?.shipping_charges,
+        discount: data[0]?.discount,
+        cartItems: data[0]?.cart_items,
+      };
+      setCartData(cartData);
+    }
+  }
+  useEffect(() => {
+    fetchCartData();
+  }, [user.id]);
   return (
     <div>
-      {cart.userId}
-      {cart.shippingCharges}
-      <button onClick={() => setCartData(cartData)}>set cart data</button>
+      'UserId: '{user.id}
+      'CartID: '{cart.userId}
+      'Shipping Charges: '{cart.shippingCharges}
+
+      {/* <button onClick={() => setCartData(cartData)}>set cart data</button> */}
       <div>
         <nav className="bg-white dark:bg-gray-800  shadow ">
           <div className="max-w-7xl mx-auto px-8">

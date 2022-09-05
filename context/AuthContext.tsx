@@ -1,6 +1,6 @@
 import supabase from "utils/supabase";
 import { createContext, ReactNode, useContext, useState } from "react";
-import {useCart} from "./CartContext";
+import { useCart } from "./CartContext";
 export const emptyUser = {
   name: "",
   email: "",
@@ -46,6 +46,7 @@ export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<user>(emptyUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [cartDataTemp, setCartDataTemp] = useState<any>();
   const { cart, setCartData } = useCart();
   const login = async (email: string, password: string) => {
     setIsLoading(true);
@@ -72,29 +73,7 @@ export function AuthProvider({ children }: Props) {
       if (error) {
         setErrorMessage(error?.message);
       }
-      if (!error) {
-        const { data, error } = await supabase
-          .from("carts")
-          .select()
-          .eq("user_id", user?.id);
-
-        if (data) {
-          console.log(data[0]);
-          const cartData = {
-            userId: data[0]?.user_id,
-            numberOfItems: data[0]?.number_of_items,
-            totalAmount: data[0]?.total_amount,
-            shippingCharges: data[0]?.shipping_charges,
-            discount: data[0]?.discount,
-            cartItems: data[0]?.cart_items,
-          };
-          console.log(data[0]?.user_id)
-          setCartData(cartData)
-        }
-      }
     }
-
-    console.log(cart);
     setIsLoading(false);
   };
 
