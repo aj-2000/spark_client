@@ -1,6 +1,6 @@
 import supabase from "utils/supabase";
 import { createContext, ReactNode, useContext, useState } from "react";
-import { useCart } from "./CartContext";
+import useLocalStorage from "../hooks/useLocalStorage"
 export const emptyUser = {
   name: "",
   email: "",
@@ -20,6 +20,7 @@ type authContextType = {
   errorMessage: string;
   login: (email: string, password: string) => void;
   logout: () => void;
+  loadUser: (userData: any) => void;
   signup: (name: string, email: string, password: string) => void;
 };
 
@@ -29,6 +30,7 @@ const authContextDefaultValues: authContextType = {
   errorMessage: "",
   login: (email: string, password: string) => {},
   logout: () => {},
+  loadUser: (userData: any) => {},
   signup: (name: string, email: string, password: string) => {},
 };
 
@@ -43,17 +45,28 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
+  const {setItem, getItem, removeItem} = useLocalStorage();
   const [user, setUser] = useState<user>(emptyUser);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [cartDataTemp, setCartDataTemp] = useState<any>();
-  const { cart, setCartData } = useCart();
+  const loadUser = (userData: any) => {
+    setUser({
+      name: userData?.user_metadata.name || "",
+      email: userData?.email || "",
+      profileImgUrl:
+        "https://jaigkxhrkwvcyqqlvfmn.supabase.co/storage/v1/object/public/sparks/avatars/banana.png" ||
+        "",
+      id: userData?.id || "",
+    })
+  }
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     const { user, session, error } = await supabase.auth.signIn({
       email: email || "hi@ajaysharma.dev",
       password: password || "ajay123!@#",
     });
+    setItem('sparks_food_user', user)
+    console.log(getItem('sparks_food_user'), getItem('user'))
     if (error) {
       setErrorMessage(error?.message);
     }
@@ -84,6 +97,7 @@ export function AuthProvider({ children }: Props) {
     if (error) {
       setErrorMessage(error?.message);
     }
+    removeItem('sparks_food_user')
     setIsLoading(false);
   };
   const signup = async (name: string, email: string, password: string) => {
@@ -134,6 +148,7 @@ export function AuthProvider({ children }: Props) {
     errorMessage,
     login,
     logout,
+    loadUser,
     signup,
   };
 

@@ -54,3 +54,59 @@
   }
 
 } */
+
+.red-bg-item{
+  @apply bg-red-500
+}
+.red-text-item{
+  @apply text-red-500
+}
+
+.yellow-bg-item{
+  @apply bg-yellow-500
+}
+.yellow-text-item{
+  @apply text-yellow-500
+}
+
+.purple-bg-item{
+  @apply bg-purple-500
+}
+.purple-text-item{
+  @apply text-purple-500
+}
+
+.green-bg-item{
+  @apply bg-green-500
+}
+.green-text-item{
+  @apply text-green-500
+}
+
+.orange-bg-item{
+  @apply bg-orange-500
+}
+.orange-text-item{
+  @apply text-orange-500
+}
+
+.cyan-bg-item{
+  @apply bg-cyan-500
+}
+.cyan-text-item{
+  @apply text-cyan-500
+}
+
+.pink-bg-item{
+  @apply bg-pink-500
+}
+.pink-text-item{
+  @apply text-pink-500
+}
+
+.blue-bg-item{
+  @apply bg-blue-500
+}
+.blue-text-item{
+  @apply text-blue-500
+}

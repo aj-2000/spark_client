@@ -45,7 +45,7 @@ export const DUMMY_DATA = [
         category: 'Breakfast',
         imageUrl: '/images/veg_sandwich.png',
         price: 499,
-        color: 'gray'
+        color: 'cyan'
     },
     {
         id: 7,
@@ -53,7 +53,7 @@ export const DUMMY_DATA = [
         category: 'Snacks',
         imageUrl: '/images/pani_puri.png',
         price: 499,
-        color: 'black'
+        color: 'pink'
     },
     {
         id: 8,

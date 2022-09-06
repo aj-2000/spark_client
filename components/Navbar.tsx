@@ -2,17 +2,25 @@ import React, { useEffect } from "react";
 import { useAuth } from "context/AuthContext";
 import { useCart } from "context/CartContext";
 import supabase from "utils/supabase";
+import useLocalStorage from "../hooks/useLocalStorage";
 const Navbar = () => {
-  const { user, isLoading, errorMessage, login, logout, signup } = useAuth();
-  const { cart, setCartData } = useCart();
-  async function fetchCartData() {
+  const { getItem } = useLocalStorage();
+  const { user, isLoading, errorMessage, login, logout, loadUser, signup } =
+    useAuth();
+  const { cart, setCartData, increaseQuantity, decreaseQuantity } = useCart();
+  async function loadUserFromLocalStorage() {
+    const userData = getItem("sparks_food_user");
+    if (userData) {
+      loadUser(userData);
+    }
+  }
+  async function fetchCartData(userId: string) {
     const { data, error } = await supabase
       .from("carts")
       .select()
-      .match({ user_id: '922002a4-1dd0-4e26-a59e-978809982b3b' });
+      .match({ user_id: userId });
 
     if (data) {
-      console.log(data);
       const cartData = {
         userId: data[0]?.user_id,
         numberOfItems: data[0]?.number_of_items,
@@ -25,14 +33,30 @@ const Navbar = () => {
     }
   }
   useEffect(() => {
-    fetchCartData();
+    loadUserFromLocalStorage().then(() => {
+      fetchCartData(user.id);
+    });
   }, [user.id]);
   return (
     <div>
       'UserId: '{user.id}
       'CartID: '{cart.userId}
-      'Shipping Charges: '{cart.shippingCharges}
-
+      'Number of Items in Cart: '{cart.numberOfItems}' 'Total Amount: '
+      {cart.totalAmount}'
+      <button
+        onClick={() => {
+          increaseQuantity("f676803a-1924-480f-be95-98d07f69969e", 499);
+        }}
+      >
+        Increase Q.
+      </button>
+      <button
+        onClick={() => {
+          decreaseQuantity("f676803a-1924-480f-be95-98d07f69969e", 499);
+        }}
+      >
+        Decrease Q.
+      </button>
       {/* <button onClick={() => setCartData(cartData)}>set cart data</button> */}
       <div>
         <nav className="bg-white dark:bg-gray-800  shadow ">

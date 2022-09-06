@@ -1,9 +1,6 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
+import supabase from "utils/supabase";
+import { useAuth } from "./AuthContext";
 
 export const emptyCart = {
   userId: "",
@@ -16,6 +13,7 @@ export const emptyCart = {
 
 type cartItem = {
   quantity: number;
+  price: number;
   foodItemId: string;
 };
 
@@ -32,10 +30,10 @@ type cartContextType = {
   cart: cart;
   isLoading: boolean;
   errorMessage: string;
-  addItem: (foodiItemId: string) => void;
-  removeItem: (foodiItemId: string) => void;
-  increaseQuantity: (foodiItemId: string) => void;
-  decreaseQuantity: (foodiItemId: string) => void;
+  addItem: (foodiItemId: string, price: number) => void;
+  removeItem: (foodiItemId: string, price: number) => void;
+  increaseQuantity: (foodiItemId: string, price: number) => void;
+  decreaseQuantity: (foodiItemId: string, price: number) => void;
   setCartData: (cartData: cart) => void;
 };
 
@@ -43,10 +41,10 @@ const cartContextDefaultValues: cartContextType = {
   cart: emptyCart,
   isLoading: false,
   errorMessage: "",
-  addItem: (foodiItemId: string) => {},
-  removeItem: (foodiItemId: string) => {},
-  increaseQuantity: (foodiItemId: string) => {},
-  decreaseQuantity: (foodiItemId: string) => {},
+  addItem: (foodiItemId: string, price: number) => {},
+  removeItem: (foodiItemId: string, price: number) => {},
+  increaseQuantity: (foodiItemId: string, price: number) => {},
+  decreaseQuantity: (foodiItemId: string, price: number) => {},
   setCartData: (cartData: cart) => {},
 };
 
@@ -64,14 +62,88 @@ export function CartProvider({ children }: Props) {
   const [cart, setCart] = useState<cart>(emptyCart);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const saveCartToDB = async () => {
+    const { error } = await supabase
+      .from("carts")
+      .update({
+        number_of_items: cart.numberOfItems,
+        total_amount: cart.totalAmount,
+        shipping_charges: cart.shippingCharges,
+        discount: cart.discount,
+        cart_items: cart.cartItems,
+      })
+      .match({ user_id: cart.userId });
+    if (error) {
+      console.log(error);
+    }
+  };
+  const addItem = async (foodiItemId: string, price: number) => {
+    setIsLoading(true);
+    const oldCart = cart;
+    oldCart.cartItems.push({
+      foodItemId: foodiItemId,
+      price: price,
+      quantity: 1,
+    });
+    oldCart.numberOfItems++;
+    oldCart.totalAmount += price;
+    oldCart.userId = cart.userId;
+    setCart({ ...oldCart });
+    await saveCartToDB();
+    setIsLoading(false);
+  };
 
-  const addItem = async (foodiItemId: string) => {};
-  const removeItem = async (foodiItemId: string) => {};
-  const increaseQuantity = async (foodiItemId: string) => {};
-  const decreaseQuantity = async (foodiItemId: string) => {};
+  const removeItem = async (foodiItemId: string, price: number) => {
+    setIsLoading(true);
+    const oldCart = cart;
+    const index = oldCart.cartItems.findIndex(
+      (item) => item.foodItemId === foodiItemId
+    );
+    if (index > -1) {
+      oldCart.totalAmount -= price * oldCart.cartItems[index].quantity;
+      oldCart.cartItems.splice(index, 1);
+
+      oldCart.numberOfItems--;
+    }
+    setCart({ ...oldCart });
+    await saveCartToDB();
+    setIsLoading(false);
+  };
+  const increaseQuantity = async (foodiItemId: string, price: number) => {
+    setIsLoading(true);
+    const oldCart = cart;
+    const index = oldCart.cartItems.findIndex(
+      (item) => item.foodItemId === foodiItemId
+    );
+    if (index > -1) {
+      oldCart.cartItems[index].quantity++;
+      oldCart.totalAmount += price;
+    }
+    setCart({ ...oldCart });
+    await saveCartToDB();
+    setIsLoading(false);
+  };
+  const decreaseQuantity = async (foodiItemId: string, price: number) => {
+    setIsLoading(true);
+    const oldCart = cart;
+    const index = oldCart.cartItems.findIndex(
+      (item) => item.foodItemId === foodiItemId
+    );
+    if (index > -1) {
+      oldCart.cartItems[index].quantity--;
+      oldCart.totalAmount -= price;
+      if (oldCart.cartItems[index].quantity == 0) {
+        oldCart.cartItems.splice(index, 1);
+        oldCart.numberOfItems--;
+      }
+    }
+    setCart({ ...oldCart });
+    await saveCartToDB();
+    setIsLoading(false);
+  };
   const setCartData = (cartData: cart) => {
-    console.log('setCartData called.')
     if (cartData) {
+      console.log(cartData);
       setCart({
         userId: cartData.userId,
         numberOfItems: cartData.numberOfItems,
