@@ -3,7 +3,6 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import React, { useEffect, useState } from "react";
 import supabase from "utils/supabase";
-import { DUMMY_DATA } from "consts/dummy_data";
 const styles = {
   container: "py-4 flex flex-wrap items-center justify-center",
 };

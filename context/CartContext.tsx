@@ -12,9 +12,12 @@ export const emptyCart = {
 };
 
 type cartItem = {
+  name: string;
   quantity: number;
   price: number;
   foodItemId: string;
+  category: string;
+  image_url: string;
 };
 
 type cart = {
@@ -30,7 +33,14 @@ type cartContextType = {
   cart: cart;
   isLoading: boolean;
   errorMessage: string;
-  addItem: (foodiItemId: string, price: number) => void;
+  addItem: (
+    foodiItemId: string,
+    price: number,
+    quantity: number,
+    image_url: string,
+    category: string,
+    name: string
+  ) => void;
   removeItem: (foodiItemId: string, price: number) => void;
   increaseQuantity: (foodiItemId: string, price: number) => void;
   decreaseQuantity: (foodiItemId: string, price: number) => void;
@@ -41,7 +51,14 @@ const cartContextDefaultValues: cartContextType = {
   cart: emptyCart,
   isLoading: false,
   errorMessage: "",
-  addItem: (foodiItemId: string, price: number) => {},
+  addItem: (
+    foodiItemId: string,
+    price: number,
+    quantity: number,
+    image_url: string,
+    category: string,
+    name: string
+  ) => {},
   removeItem: (foodiItemId: string, price: number) => {},
   increaseQuantity: (foodiItemId: string, price: number) => {},
   decreaseQuantity: (foodiItemId: string, price: number) => {},
@@ -77,13 +94,23 @@ export function CartProvider({ children }: Props) {
       console.log(error);
     }
   };
-  const addItem = async (foodiItemId: string, price: number) => {
+  const addItem = async (
+    foodiItemId: string,
+    price: number,
+    quantity: number,
+    image_url: string,
+    category: string,
+    name: string
+  ) => {
     setIsLoading(true);
     const oldCart = cart;
-    oldCart.cartItems.push({
+    oldCart?.cartItems?.push({
       foodItemId: foodiItemId,
       price: price,
       quantity: 1,
+      image_url: image_url,
+      category: category,
+      name: name,
     });
     oldCart.numberOfItems++;
     oldCart.totalAmount += price;
@@ -96,7 +123,7 @@ export function CartProvider({ children }: Props) {
   const removeItem = async (foodiItemId: string, price: number) => {
     setIsLoading(true);
     const oldCart = cart;
-    const index = oldCart.cartItems.findIndex(
+    const index = oldCart?.cartItems?.findIndex(
       (item) => item.foodItemId === foodiItemId
     );
     if (index > -1) {

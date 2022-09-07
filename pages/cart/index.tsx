@@ -78,8 +78,19 @@ const Cart = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <CartItem />
-                  <CartItem />
+                  {
+                    cart.cartItems?.map(item => {
+                      const cartItem = {
+                        id: item.foodItemId,
+                        price: item.price,
+                        quantity: item.quantity,
+                        image_url: item.image_url,
+                        category: item.category,
+                        name: item.name
+                      }
+                      return <CartItem key={item.foodItemId} {...cartItem}/>
+                    })
+                  }
                 </tbody>
               </table>
             </div>

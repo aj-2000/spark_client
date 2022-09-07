@@ -1,3 +1,4 @@
+import { useCart } from "context/CartContext";
 import React from "react";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 const styles = {
@@ -5,12 +6,18 @@ const styles = {
   quatityStyle: "text-gray-900 whitespace-no-wrap",
   iconStyle: "text-2xl cursor-pointer shadow-lg border",
 };
-const QuantityInput = () => {
+interface QuantityInputProps {
+  foodItemId: string;
+  quantity: number;
+  price: number;
+}
+const QuantityInput = ({foodItemId, price, quantity}: QuantityInputProps) => {
+  const {increaseQuantity, decreaseQuantity} = useCart();
   return (
     <div className={styles.continer}>
-      <AiOutlineMinus className={styles.iconStyle} />
-      <p className={styles.quatityStyle}>565</p>
-      <AiOutlinePlus className={styles.iconStyle} />
+      <AiOutlineMinus onClick={ () => decreaseQuantity(foodItemId, price)} className={styles.iconStyle} />
+      <p className={styles.quatityStyle}>{quantity}</p>
+      <AiOutlinePlus  onClick={ () => increaseQuantity(foodItemId, price)} className={styles.iconStyle} />
     </div>
   );
 };

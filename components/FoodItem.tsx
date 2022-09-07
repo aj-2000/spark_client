@@ -49,7 +49,7 @@ const FoodItem = ({
   function toggleAddedToCartState() {
     setIsAddedToCart(!isAddedToCart);
     if (!isAddedToCart) {
-      addItem(id, price);
+      addItem(id, price, 1, image_url, category, name);
     } else {
       removeItem(id, price);
     }
