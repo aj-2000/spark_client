@@ -51,7 +51,7 @@ const index = () => {
       .select()
       .match({ id: user.id });
     if (!error) {
-      setUserData(data[0]);
+      setUserData(data?.[0]);
     } else {
       console.log(error);
     }
