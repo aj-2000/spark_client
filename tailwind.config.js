@@ -7,7 +7,11 @@ module.exports = {
     defaultLocale: "en-US",
   },
   purge: {
-    content: ["./pages/**/*.tsx", "./components/**/*.tsx"],
+    content: [
+      "./node_modules/flowbite-react/**/*.js",
+      "./pages/**/*.tsx",
+      "./components/**/*.tsx",
+    ],
     // These options are passed through directly to PurgeCSS
   },
   theme: {
@@ -26,7 +30,7 @@ module.exports = {
       zIndex: ["hover", "active"],
     },
   },
-  plugins: [],
+  plugins: [require("flowbite/plugin")],
   future: {
     purgeLayersByDefault: true,
   },

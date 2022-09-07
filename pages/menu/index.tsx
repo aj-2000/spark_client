@@ -1,3 +1,5 @@
+import Accordion from "@/components/Accordion";
+import Carousel from "@/components/Carousel";
 import Filters from "@/components/Filters";
 import FoodItem from "@/components/FoodItem";
 import Footer from "@/components/Footer";
@@ -7,8 +9,7 @@ import React, { useEffect, useState } from "react";
 import supabase from "utils/supabase";
 const styles = {
   container: "py-4 flex flex-wrap items-center justify-center",
-  backgroundShade: "bg-gray-100 rounded-xl m-4"
-
+  backgroundShade: "bg-gray-100 rounded-xl m-4",
 };
 const Menu = () => {
   const [foodItems, setFoodItems] = useState<any>([]);
@@ -27,7 +28,7 @@ const Menu = () => {
   return (
     <>
       <Navbar />
-
+      <Carousel />
       <TopWeeklyItems>
         <div className={styles.container}>
           {foodItems.slice(2, 6).map((foodItem: any) => {
@@ -43,6 +44,7 @@ const Menu = () => {
           return <FoodItem key={foodItem.id} {...foodItem} />;
         })}
       </div>
+      <Accordion/>
       <Footer />
     </>
   );
