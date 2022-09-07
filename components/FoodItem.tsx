@@ -88,7 +88,7 @@ const FoodItem = ({
               onClick={toggleAddedToCartState}
               className={styles.addedToCartButton}
             >
-              {isAddedToCart ? "Added to cart" : "Add to cart"}
+              {isAddedToCart ? "Remove from Cart" : "Add to Cart"}
             </button>
           </div>
         </div>

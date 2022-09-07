@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "context/AuthContext";
 import { useCart } from "context/CartContext";
 import supabase from "utils/supabase";
 import useLocalStorage from "../hooks/useLocalStorage";
+import CartIcon from "./CartIcon";
 const Navbar = () => {
+  const [isMenuHidden, setIsMenuHidden] = useState(false);
+
   const { getItem } = useLocalStorage();
   const { user, isLoading, errorMessage, login, logout, loadUser, signup } =
     useAuth();
@@ -32,6 +35,9 @@ const Navbar = () => {
       setCartData(cartData);
     }
   }
+  const handleMenuToggle = (e: any) => {
+    setIsMenuHidden(!isMenuHidden);
+  };
   useEffect(() => {
     loadUserFromLocalStorage().then(() => {
       fetchCartData(user.id);
@@ -39,25 +45,6 @@ const Navbar = () => {
   }, [user.id]);
   return (
     <div>
-      'UserId: '{user.id}
-      'CartID: '{cart.userId}
-      'Number of Items in Cart: '{cart.numberOfItems}' 'Total Amount: '
-      {cart.totalAmount}'
-      <button
-        onClick={() => {
-          increaseQuantity("f676803a-1924-480f-be95-98d07f69969e", 499);
-        }}
-      >
-        Increase Q.
-      </button>
-      <button
-        onClick={() => {
-          decreaseQuantity("f676803a-1924-480f-be95-98d07f69969e", 499);
-        }}
-      >
-        Decrease Q.
-      </button>
-      {/* <button onClick={() => setCartData(cartData)}>set cart data</button> */}
       <div>
         <nav className="bg-white dark:bg-gray-800  shadow ">
           <div className="max-w-7xl mx-auto px-8">
@@ -107,8 +94,10 @@ const Navbar = () => {
                 <div className="ml-4 flex items-center md:ml-6">
                   <div className="ml-3 relative">
                     <div className="relative inline-block text-left">
-                      <div>
+                      <div className="flex gap-x-8">
+                        <CartIcon />
                         <button
+                          onClick={handleMenuToggle}
                           type="button"
                           className="  flex items-center justify-center w-full rounded-md  px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
                           id="options-menu"
@@ -133,7 +122,11 @@ const Navbar = () => {
                           )}
                         </button>
                       </div>
-                      <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+                      <div
+                        className={`${
+                          !isMenuHidden && "hidden"
+                        } origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5`}
+                      >
                         <div
                           className="py-1 "
                           role="menu"

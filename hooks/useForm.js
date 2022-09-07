@@ -10,6 +10,10 @@ const useForm = (intialValues) => {
     }));
   };
 
+  const setFormData = (formData) => {
+    setFormData(formData);
+  }
+
   const resetForm = () => {
     setForm(intialValues);
   };
@@ -17,6 +21,7 @@ const useForm = (intialValues) => {
   return {
     form,
     handleChange,
+    setFormData,
     resetForm,
   };
 };
