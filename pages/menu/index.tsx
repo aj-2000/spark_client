@@ -1,5 +1,5 @@
 import Accordion from "@/components/Accordion";
-import Carousel from "@/components/Carousel";
+import Carousel  from "@/components/Carousel"
 import Filters from "@/components/Filters";
 import FoodItem from "@/components/FoodItem";
 import Footer from "@/components/Footer";

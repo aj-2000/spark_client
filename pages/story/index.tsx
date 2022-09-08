@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import TeamMember from "@/components/TeamMember";
 import { storyTextContent } from "consts/storyTextContent";
 import React from "react";
 
@@ -17,12 +18,18 @@ const styles = {
   storyContent:
     " font-mono italic text-lg antialiased font-semibold tracking-wide leading-6	text-center",
   storyContentBox: "rounded-r-lg shadow-lg bg-gray-200 flex-1 p-16",
+  teamMembersBox: "flex flex-wrap justify-center gap-x-4",
+  teamMemberBox: "pt-24",
+  mainImageContainer:"overflow-hidden h-[50vh]"
 };
 
 const OurStory = () => {
   return (
     <div className={styles.container}>
       <Navbar />
+      <div className={styles.mainImageContainer}>
+<img src="https://images.hindustantimes.com/img/2022/04/25/1600x900/0b602fd4-8f22-11ec-b0bf-65e18a89e7b6_1645337696483_1650844899820.jpg" />
+      </div>
       <div className={styles.headingContainer}>
         <p className={styles.heading}>Our Story</p>
       </div>
@@ -45,6 +52,20 @@ const OurStory = () => {
       </div>
       <div className={styles.subHeadingContainer}>
         <p className={styles.subHeading}>Meet The Best Team In The World</p>
+      </div>
+      <div className={styles.teamMembersBox}>
+        <div className={styles.teamMemberBox}>
+          <TeamMember />
+        </div>
+        <div className={styles.teamMemberBox}>
+          <TeamMember />
+        </div>
+        <div className={styles.teamMemberBox}>
+          <TeamMember />
+        </div>
+        <div className={styles.teamMemberBox}>
+          <TeamMember />
+        </div>
       </div>
       <Footer />
     </div>
