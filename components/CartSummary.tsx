@@ -40,6 +40,7 @@ const CartSummary = () => {
             console.log(error);
           }
           setIsLoading(false);
+          router.push('../orders')
         });
     }
   };
