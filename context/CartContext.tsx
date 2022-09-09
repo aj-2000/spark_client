@@ -45,6 +45,7 @@ type cartContextType = {
   increaseQuantity: (foodiItemId: string, price: number) => void;
   decreaseQuantity: (foodiItemId: string, price: number) => void;
   setCartData: (cartData: cart) => void;
+  resetCart: () => void;
 };
 
 const cartContextDefaultValues: cartContextType = {
@@ -63,6 +64,7 @@ const cartContextDefaultValues: cartContextType = {
   increaseQuantity: (foodiItemId: string, price: number) => {},
   decreaseQuantity: (foodiItemId: string, price: number) => {},
   setCartData: (cartData: cart) => {},
+  resetCart: () => {},
 };
 
 const CartContext = createContext<cartContextType>(cartContextDefaultValues);
@@ -80,7 +82,7 @@ export function CartProvider({ children }: Props) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const saveCartToDB = async () => {
-    const { error } = await supabase
+    await supabase
       .from("carts")
       .update({
         number_of_items: cart.numberOfItems,
@@ -89,10 +91,12 @@ export function CartProvider({ children }: Props) {
         discount: cart.discount,
         cart_items: cart.cartItems,
       })
-      .match({ user_id: cart.userId });
-    if (error) {
-      console.log(error);
-    }
+      .match({ user_id: cart.userId || "" })
+      .then((error) => {
+        if (error.error) {
+          console.log(error);
+        }
+      });
   };
   const addItem = async (
     foodiItemId: string,
@@ -119,7 +123,18 @@ export function CartProvider({ children }: Props) {
     await saveCartToDB();
     setIsLoading(false);
   };
-
+  const resetCart = async () => {
+    setIsLoading(true);
+    const oldCart = cart;
+    oldCart.cartItems = [];
+    oldCart.totalAmount = 0;
+    oldCart.numberOfItems = 0;
+    setCart({
+      ...oldCart,
+    });
+    await saveCartToDB();
+    setIsLoading(false);
+  };
   const removeItem = async (foodiItemId: string, price: number) => {
     setIsLoading(true);
     const oldCart = cart;
@@ -165,12 +180,12 @@ export function CartProvider({ children }: Props) {
       }
     }
     setCart({ ...oldCart });
+
     await saveCartToDB();
     setIsLoading(false);
   };
   const setCartData = (cartData: cart) => {
     if (cartData) {
-      console.log(cartData);
       setCart({
         userId: cartData.userId,
         numberOfItems: cartData.numberOfItems,
@@ -190,6 +205,7 @@ export function CartProvider({ children }: Props) {
     increaseQuantity,
     decreaseQuantity,
     setCartData,
+    resetCart,
   };
 
   return (
