@@ -1,7 +1,9 @@
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import OrderItem from "@/components/OrderItem";
-import React from "react";
+import { useAuth } from "context/AuthContext";
+import React, { useEffect, useState } from "react";
+import supabase from "utils/supabase";
 const styles = {
   container: "",
   mainHeading: "font-mono text-2xl subpixel-antialiased font-light mt-16",
@@ -14,14 +16,32 @@ const styles = {
   itemsList: "mt-4 flex flex-col gap-4",
 };
 const Orders = () => {
+  const [orders, setOrders] = useState<any>([]);
+  const { user } = useAuth();
+  const fetchOrders = async () => {
+    await supabase
+      .from("orders")
+      .select()
+      .order("created_at", { ascending: false })
+      .match({ user_id: user.id })
+      .then(({ data, error }) => {
+        if (!error) {
+          setOrders(data);
+        } else {
+          console.log(error);
+        }
+      });
+  };
+  useEffect(() => {
+    fetchOrders();
+  }, [user.id]);
   return (
     <div className={styles.container}>
       <Navbar />
-      <div className="container mx-auto px-4 sm:px-8 max-w-3xl">
+      <div className="container mx-auto px-4 sm:px-8 max-w-5xl">
         <div className="py-8">
           <div className="flex flex-row mb-1 sm:mb-0 justify-between w-full">
             <h2 className="text-2xl leading-tight">Orders</h2>
-            
           </div>
           <div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
             <div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
@@ -59,9 +79,21 @@ const Orders = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  
-                  
-                  <OrderItem/>
+                  {orders.map((order: any) => {
+                    const orderData = {
+                      id: order.id,
+                      createdAt: order.created_at,
+                      lastChangeInStatusAt: order.last_change_in_status_at,
+                      numberOfItems: order.number_of_items,
+                      orderItems: order.order_items,
+                      shippingCharges: order.shipping_charges,
+                      status: order.status,
+                      totalAmount: order.total_amount,
+                      userId: order.user_id,
+                      discount: order.discount,
+                    };
+                    return <OrderItem key={order.id} {...orderData} />;
+                  })}
                 </tbody>
               </table>
               <div className="px-5 bg-white py-5 flex flex-col xs:flex-row items-center xs:justify-between">

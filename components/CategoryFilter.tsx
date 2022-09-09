@@ -1,16 +1,23 @@
-import React from "react";
+import { categories } from "consts/categories";
+import { useFilters } from "context/FiltersContext";
+import { useState } from "react";
 
 const CategoryFilter = () => {
+  const { filtersState, handleFilters } = useFilters();
+  const [isCategoryMenuOpen, setIsCategoryMenuOpen] = useState<boolean>(false);
   return (
     <div>
       <div className="relative inline-block text-left">
         <div>
           <button
+            onClick={() => {
+              setIsCategoryMenuOpen(!isCategoryMenuOpen);
+            }}
             type="button"
             className=" border border-gray-300 bg-white dark:bg-gray-800 shadow-sm flex items-center justify-center w-full rounded-md  px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-50 hover:bg-gray-50 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-gray-500"
             id="options-menu"
           >
-            CATEGORY
+            {filtersState.category || "CATEGORY"}
             <svg
               width="20"
               height="20"
@@ -22,40 +29,54 @@ const CategoryFilter = () => {
             </svg>
           </button>
         </div>
-        <div className="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5">
+        <div
+          className={`${
+            !isCategoryMenuOpen && "hidden"
+          } origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5`}
+        >
+          <div
+            className="py-1 "
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="options-menu"
+          ></div>
+          <div
+            onClick={() => {
+              handleFilters({ category: "", filterByCategory: false });
+              setIsCategoryMenuOpen(false);
+            }}
+            className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+            role="menuitem"
+          >
+            <span className="flex flex-col">
+              <span>None</span>
+            </span>
+          </div>
           <div
             className="py-1 "
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="options-menu"
           >
-            <a
-              href="#"
-              className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
-              role="menuitem"
-            >
-              <span className="flex flex-col">
-                <span>Stripe</span>
-              </span>
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
-              role="menuitem"
-            >
-              <span className="flex flex-col">
-                <span>Mastercard</span>
-              </span>
-            </a>
-            <a
-              href="#"
-              className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
-              role="menuitem"
-            >
-              <span className="flex flex-col">
-                <span>Paypal</span>
-              </span>
-            </a>
+            {categories.map((category) => {
+              return (
+                <div
+                  onClick={() => {
+                    handleFilters({
+                      category: category,
+                      filterByCategory: true,
+                    });
+                    setIsCategoryMenuOpen(false);
+                  }}
+                  className="block px-4 py-2 text-md text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-100 dark:hover:text-white dark:hover:bg-gray-600"
+                  role="menuitem"
+                >
+                  <span className="flex flex-col">
+                    <span>{category}</span>
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

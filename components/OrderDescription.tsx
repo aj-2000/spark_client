@@ -1,37 +1,33 @@
 import React from "react";
+import { OrderItem } from "./OrderItem";
 
 const styles = {
   container: "",
-  foodItemDetails: "text-xs font-normal flex justify-between",
-  orderTotal: "text-center p-2 font-semibold text-base",
+  foodItemDetails: "text-xs gap-x-2 font-normal flex justify-between",
+  orderTotal: "text-center bg-orange-500 text-white py-1 font-semibold text-base mt-2 rounded-lg",
 };
 
-const OrderDescription = () => {
+interface OrderDescriptionProps {
+  orderDescriptionItems: OrderItem[];
+  totalAmount: number;
+}
+const OrderDescription = ({
+  totalAmount,
+  orderDescriptionItems,
+}: OrderDescriptionProps) => {
   return (
     <div className={styles.container}>
-      <div className={styles.foodItemDetails}>
-        <p>Samosa</p>
-        <p className="text-sm font-bold">
-          x
-          {2}
-        </p>
-      </div>
-      <div className={styles.foodItemDetails}>
-        <p > Veg Pizza</p>
-        <p className="text-sm font-bold">
-          x
-          {5}
-        </p>
-      </div>
-      <div className={styles.foodItemDetails}>
-        <p>Choco Icecream</p>
-        <p className="text-sm font-bold">
-          x
-          {7}
-        </p>
-      </div>
+      {orderDescriptionItems.map((item: OrderItem) => {
+        return (
+          <div className={styles.foodItemDetails}>
+            <p>{item.name}</p>
+            <p className="text-sm font-bold">x{item.quantity}</p>
+          </div>
+        );
+      })}
+
       <div className={styles.orderTotal}>
-        <p>4546 RS.</p>
+        <p>{totalAmount} RS.</p>
       </div>
     </div>
   );

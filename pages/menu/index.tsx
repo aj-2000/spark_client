@@ -1,10 +1,11 @@
 import Accordion from "@/components/Accordion";
-import Carousel  from "@/components/Carousel"
+import Carousel from "@/components/Carousel";
 import Filters from "@/components/Filters";
 import FoodItem from "@/components/FoodItem";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import TopWeeklyItems from "@/components/TopWeeklyItems";
+import { useFilters } from "context/FiltersContext";
 import React, { useEffect, useState } from "react";
 import supabase from "utils/supabase";
 const styles = {
@@ -13,6 +14,7 @@ const styles = {
 };
 const Menu = () => {
   const [foodItems, setFoodItems] = useState<any>([]);
+  const { filtersState, handleFilters } = useFilters();
   // let topWeeklyItems = [];
   async function fetchFoodItemsData() {
     const { data, error } = await supabase.from("food_items").select();
@@ -44,7 +46,7 @@ const Menu = () => {
           return <FoodItem key={foodItem.id} {...foodItem} />;
         })}
       </div>
-      <Accordion/>
+      <Accordion />
       <Footer />
     </>
   );

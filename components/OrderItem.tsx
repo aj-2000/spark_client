@@ -3,7 +3,27 @@ import OrderDescription from "./OrderDescription";
 const styles = {
   container: "",
 };
-const OrderItem = () => {
+export type OrderItem = {
+  foodItemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+  category: string;
+  img_url: string;
+};
+interface OrderItemProps {
+  id: string;
+  createdAt: string;
+  discount: number;
+  lastChangeInStatusAt: string;
+  numberOfItems: number;
+  orderItems: OrderItem[];
+  shippingCharges: number;
+  status: string;
+  totalAmount: number;
+  userId: string;
+}
+const OrderItem = ({ id, status, createdAt, orderItems, totalAmount }: OrderItemProps) => {
   return (
     <tr>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -19,16 +39,18 @@ const OrderItem = () => {
           </div> */}
           <div className="ml-3">
             <p className="text-gray-900 font-bold font-mono whitespace-no-wrap text-xs">
-              ca55f4c9-1202-4f1b-8330-68836d4661ce
+              {id}
             </p>
           </div>
         </div>
       </td>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <OrderDescription/>
+        <OrderDescription {...{totalAmount, orderDescriptionItems: orderItems}} />
       </td>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        <p className="text-gray-900 whitespace-no-wrap">12/09/2020</p>
+        <p className="text-gray-900 whitespace-no-wrap">
+          {createdAt.slice(0, 10)}
+        </p>
       </td>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
         <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
@@ -36,7 +58,7 @@ const OrderItem = () => {
             aria-hidden="true"
             className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
           ></span>
-          <span className="relative">CREATED</span>
+          <span className="relative">{status}</span>
         </span>
       </td>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">

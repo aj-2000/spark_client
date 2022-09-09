@@ -1,7 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import supabase from "utils/supabase";
-import { useAuth } from "./AuthContext";
-
 export const emptyCart = {
   userId: "",
   numberOfItems: 0,
