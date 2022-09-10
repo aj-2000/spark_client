@@ -14,18 +14,77 @@ const styles = {
 };
 const Menu = () => {
   const [foodItems, setFoodItems] = useState<any>([]);
+  const [topWeeklyFoodItems, setTopWeeklyFoodItems] = useState<any>([]);
   const { filtersState, handleFilters } = useFilters();
-  // let topWeeklyItems = [];
   async function fetchFoodItemsData() {
-    const { data, error } = await supabase.from("food_items").select();
-    console.log(data);
-    setFoodItems(data);
+    if (!filtersState.filterByCategory && !filtersState.sortByPrice) {
+      await supabase
+        .from("food_items")
+        .select()
+        .then(({ data, error }) => {
+          if (!error) {
+            setFoodItems(data);
+          } else {
+            console.log(error);
+          }
+        });
+    } else if (filtersState.filterByCategory && !filtersState.sortByPrice) {
+      await supabase
+        .from("food_items")
+        .select()
+        .match({ category: filtersState.category })
+        .then(({ data, error }) => {
+          if (!error) {
+            setFoodItems(data);
+          } else {
+            console.log(error);
+          }
+        });
+    } else if (!filtersState.filterByCategory && filtersState.sortByPrice) {
+      await supabase
+        .from("food_items")
+        .select()
+        .order("price", { ascending: filtersState.sortByPriceAscending })
+        .then(({ data, error }) => {
+          if (!error) {
+            setFoodItems(data);
+          } else {
+            console.log(error);
+          }
+        });
+    } else if (filtersState.filterByCategory && filtersState.sortByPrice) {
+      await supabase
+        .from("food_items")
+        .select()
+        .match({ category: filtersState.category })
+        .order("price", { ascending: filtersState.sortByPriceAscending })
+        .then(({ data, error }) => {
+          if (!error) {
+            setFoodItems(data);
+          } else {
+            console.log(error);
+          }
+        });
+    }
   }
+  const fetchTopWeeklyFoodItems = async () => {
+    await supabase
+      .from("food_items")
+      .select()
+      .order("weekly_orders", { ascending: false })
+      .then(({ data, error }) => {
+        if (!error) {
+          setTopWeeklyFoodItems(data);
+        } else {
+          console.log(error);
+        }
+      });
+  };
   useEffect(() => {
-    fetchFoodItemsData()
-      .then
-      // topWeeklyItems = foodItems.subarray(0,3)
-      ();
+    fetchFoodItemsData();
+  }, [filtersState]);
+  useEffect(() => {
+    fetchTopWeeklyFoodItems();
   }, []);
   return (
     <>
@@ -33,9 +92,9 @@ const Menu = () => {
       <Carousel />
       <TopWeeklyItems>
         <div className={styles.container}>
-          {foodItems.slice(2, 6).map((foodItem: any) => {
+          {topWeeklyFoodItems.slice(0, 4).map((foodItem: any) => {
             // console.log(data.name);
-            return <FoodItem key={foodItem.id} {...foodItem} />;
+            return <FoodItem key={`${foodItem.id}twfi`} {...foodItem} />;
           })}
         </div>
       </TopWeeklyItems>

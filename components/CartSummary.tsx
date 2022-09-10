@@ -34,13 +34,37 @@ const CartSummary = () => {
         ])
         .then(({ data, error }) => {
           if (!error) {
-            console.log(data);
-            resetCart();
+            cart.cartItems.map(async (item) => {
+              await supabase
+                .from("food_items")
+                .select("weekly_orders")
+                .match({ id: item.foodItemId })
+                .then(async ({ data, error }) => {
+                  if (!error) {
+                    await supabase
+                      .from("food_items")
+                      .update({ weekly_orders: data[0].weekly_orders + 1 })
+                      .match({ id: item.foodItemId })
+                      .then(({ error }) => {
+                        if (!error) {
+                          resetCart();
+                          setIsLoading(false);
+                          router.push("../orders");
+                        } else {
+                          setIsLoading(false);
+                          console.log(error);
+                        }
+                      });
+                  } else {
+                    setIsLoading(false);
+                    console.log(error);
+                  }
+                });
+            });
           } else {
+            setIsLoading(false);
             console.log(error);
           }
-          setIsLoading(false);
-          router.push('../orders')
         });
     }
   };
