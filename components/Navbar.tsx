@@ -4,8 +4,14 @@ import { useCart } from "context/CartContext";
 import supabase from "utils/supabase";
 import useLocalStorage from "../hooks/useLocalStorage";
 import CartIcon from "./CartIcon";
+import { useRouter } from 'next/router'
+const styles = {
+  active: "text-gray-800 dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium",
+  notActive: "text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+}
 const Navbar = () => {
   const [isMenuHidden, setIsMenuHidden] = useState(false);
+  const router = useRouter();
 
   const { getItem } = useLocalStorage();
   const { user, isLoading, errorMessage, login, logout, loadUser, signup } =
@@ -60,13 +66,13 @@ const Navbar = () => {
                 <div className="hidden md:block">
                   <div className="ml-10 flex items-baseline space-x-4">
                     <a
-                      className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      className={`${router.pathname === '/story' ? styles.active : styles.notActive }`}
                       href="/story"
                     >
                       Our Story
                     </a>
                     <a
-                      className="text-gray-800 dark:text-white  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                      className={`${router.pathname === '/menu' ? styles.active : styles.notActive }`}
                       href="/menu"
                     >
                       Menu
@@ -74,13 +80,13 @@ const Navbar = () => {
                     {user.id === "" && (
                       <>
                         <a
-                          className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                          className={`${router.pathname === '/auth/login' ? styles.active : styles.notActive }`}
                           href="/auth/login"
                         >
                           Login
                         </a>
                         <a
-                          className="text-gray-300  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                          className={`${router.pathname === '/auth/register' ? styles.active : styles.notActive }`}
                           href="/auth/register"
                         >
                           Register

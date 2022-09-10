@@ -101,7 +101,6 @@ const Menu = () => {
       <Filters />
       <div className={`${styles.container} ${styles.backgroundShade}`}>
         {foodItems.map((foodItem: any) => {
-          // console.log(data.name);
           return <FoodItem key={foodItem.id} {...foodItem} />;
         })}
       </div>
