@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "context/AuthContext";
 import { useRouter } from 'next/router'
+import supabase from "utils/supabase";
 interface AuthFormProps {
   formType: string;
 }
@@ -9,6 +10,12 @@ const AuthForm = ({ formType }: AuthFormProps) => {
   const router = useRouter()
   const [password, setPassword] = useState<string>("");
   const [name, setName] = useState<string>("");
+  async function signInWithGoogle() {
+    const { user, session, error } = await supabase.auth.signIn({
+      provider: 'google',
+    })
+    console.log(user)
+  }
   const { user, isLoading, errorMessage, login, logout, signup } = useAuth();
   function emailHandler(event: any) {
     setEmail(event.target?.value);
@@ -49,6 +56,7 @@ const AuthForm = ({ formType }: AuthFormProps) => {
         <div className="flex gap-4 item-center">
           <button
             type="button"
+            onClick={signInWithGoogle}
             className="py-2 px-4 flex justify-center items-center  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
           >
             <svg

@@ -1,4 +1,6 @@
-import React from "react";
+import { useRouter } from "next/router";
+import { useState } from "react";
+import supabase from "utils/supabase";
 import OrderDescription from "./OrderDescription";
 const styles = {
   container: "",
@@ -30,6 +32,22 @@ const OrderItem = ({
   orderItems,
   totalAmount,
 }: OrderItemProps) => {
+  const [statusState, setStatusState] = useState<string>(status);
+  const router = useRouter()
+  const handleCancel = async () => {
+    await supabase
+      .from("orders")
+      .update({ status: "CANCELED" })
+      .match({ id: id })
+      .then(({ data, error }) => {
+        if (!error) {
+          setStatusState("CANCELED");
+          router.reload()
+        } else {
+          setStatusState(error.message);
+        }
+      });
+  };
   return (
     <tr>
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
@@ -60,57 +78,60 @@ const OrderItem = ({
           {createdAt.slice(0, 10)}
         </p>
       </td>
-      {status === "CREATED" && (
+      {statusState === "CREATED" && (
         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
           <span className="relative inline-block px-3 py-1 font-semibold text-blue-900 leading-tight">
             <span
               aria-hidden="true"
               className="absolute inset-0 bg-blue-200 opacity-50 rounded-full"
             ></span>
-            <span className="relative">{status}</span>
+            <span className="relative">{statusState}</span>
           </span>
         </td>
       )}
-      {status === "PROCESSING" && (
+      {statusState === "PROCESSING" && (
         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
           <span className="relative inline-block px-3 py-1 font-semibold text-yellow-900 leading-tight">
             <span
               aria-hidden="true"
               className="absolute inset-0 bg-yellow-200 opacity-50 rounded-full"
             ></span>
-            <span className="relative">{status}</span>
+            <span className="relative">{statusState}</span>
           </span>
         </td>
       )}
-      {status === "DELIVERED" && (
+      {statusState === "DELIVERED" && (
         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
           <span className="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
             <span
               aria-hidden="true"
               className="absolute inset-0 bg-green-200 opacity-50 rounded-full"
             ></span>
-            <span className="relative">{status}</span>
+            <span className="relative">{statusState}</span>
           </span>
         </td>
       )}
-      {status === "CANCELED" && (
+      {statusState === "CANCELED" && (
         <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
           <span className="relative inline-block px-3 py-1 font-semibold text-red-900 leading-tight">
             <span
               aria-hidden="true"
               className="absolute inset-0 bg-red-200 opacity-50 rounded-full"
             ></span>
-            <span className="relative">{status}</span>
+            <span className="relative">{statusState}</span>
           </span>
         </td>
       )}
       <td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-        {status === "CREATED" && (
-          <button className="text-indigo-600 hover:text-indigo-900">
+        {statusState === "CREATED" && (
+          <button
+            onClick={handleCancel}
+            className="text-indigo-600 hover:text-indigo-900"
+          >
             CANCEL
           </button>
         )}
-        {status !== "CREATED" && (
+        {statusState !== "CREATED" && (
           <button disabled className="text-gray-500">
             CANCEL
           </button>
