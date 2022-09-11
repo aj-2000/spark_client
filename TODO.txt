@@ -1,7 +1,7 @@
-1. Orders Feature
+1. 
 2. FIX CSS in foodItem
 3. FramerMotion
-4. Carosel - topWeeklyItems
-5. Weekly Best Items Logic
-6. Filters on Menu Page
+4. 
+5. 
+6. 
 7. 
