@@ -1,25 +1,20 @@
 import getConfig from "next/config";
+import { useRouter } from "next/router";
 import { useEffect } from "react";
-import supabase from "utils/supabase";
+
 const { publicRuntimeConfig } = getConfig();
 const { name } = publicRuntimeConfig.site;
 
 const Home = () => {
+  const router = useRouter();
   useEffect(() => {
-    console.log(supabase.auth.session()?.user);
-  });
+    router.push("/menu");
+  }, [])
   return (
     <>
-      {supabase.auth.session()?.user?.id}
-      <button
-        onClick={async () => {
-          supabase.auth.signOut();
-        }}
-      >
-        Log Out;
-      </button>
+      <p>Redirecting to Menu Page...</p>
     </>
-  );
-};
+  )
+}
 
 export default Home;
